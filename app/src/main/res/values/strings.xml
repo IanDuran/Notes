@@ -3,4 +3,5 @@
     <string name="title_text">Title goes here</string>
     <string name="text_text">Text goes here</string>
     <string name="save_text">Save</string>
+    <string name="create">Create New</string>
 </resources>

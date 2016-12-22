@@ -10,10 +10,22 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.usuario.notes.MainActivity">
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_create_new"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="16dp"
+        android:text="@string/create"/>
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/notes_view">
+        android:id="@+id/notes_view"
+        android:layout_above="@id/button_create_new">
 
     </ListView>
+
+
 </RelativeLayout>
