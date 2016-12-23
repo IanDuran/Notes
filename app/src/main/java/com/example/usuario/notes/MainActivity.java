@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
         db = openOrCreateDatabase(dbName, Context.MODE_PRIVATE, null);
         db.execSQL("CREATE TABLE IF NOT EXISTS " + tableName + " (id INT, title VARCHAR(255), content VARCHAR(8000))");
         contents = new ArrayList<>();
-        resetTable();
         this.fillList(contents);
         db.close();
         adapter = new NoteAdapter(this, contents);
@@ -83,12 +82,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
             c.close();
-        }
-    }
-
-    private void resetTable(){
-        if(db.isOpen()){
-            db.execSQL("DELETE FROM " +tableName);
         }
     }
 

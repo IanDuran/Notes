@@ -31,7 +31,7 @@ public class NewNoteActivity extends AppCompatActivity {
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!title.getText().toString().equals("") || !text.getText().toString().equals("")){
+                if(!title.getText().toString().equals("") && !text.getText().toString().equals("")){
                     SharedPreferences sp = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
                     int newId = sp.getInt(CURRENT_INDEX, 0);
                     addRow(newId, title.getText().toString(), text.getText().toString());
