@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -17,15 +18,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private final String dbName = "Notes.db";
-    private final String tableName = "notes";
+    public static final String dbName = "Notes.db";
+    public static final String tableName = "notes";
     private ListView lv;
     private Button buttonCreate;
     private ArrayList<Note> contents;
     private SQLiteDatabase db;
-
+    private ArrayAdapter<Note> adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,22 +37,23 @@ public class MainActivity extends AppCompatActivity {
         db = openOrCreateDatabase(dbName, Context.MODE_PRIVATE, null);
         db.execSQL("CREATE TABLE IF NOT EXISTS " + tableName + " (id INT, title VARCHAR(255), content VARCHAR(8000))");
         contents = new ArrayList<>();
-        Cursor s = db.rawQuery("SELECT * FROM " + tableName, null);
-        int size = s.getCount();
-        if(size > 0){
-            for(int i = 0; i < size; i++){
-                contents.add(new Note(s.getInt(0), s.getString(1), s.getString(2)));
-                s.moveToNext();
-            }
-        }
-        s.close();
-        ArrayAdapter adapter= new NoteAdapter(this, contents);
+        //Delete
+        this.resetTable();
+        //
+        db.execSQL("INSERT INTO " + tableName + " (id, title, content) VALUES (1, 'Bla', 'Some shit')");
+        db.execSQL("INSERT INTO " + tableName + " (id, title, content) VALUES (1, 'BlaBla', 'Some other shit')");
+        this.fillList(contents);
+        db.close();
+        adapter = new NoteAdapter(this, contents);
         lv.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-
+                Intent i = new Intent(getApplicationContext(), NoteActivity.class);
+                Bundle b = new Bundle();
+                b.putSerializable("note", contents.get(position));
+                i.putExtras(b);
+                startActivity(i);
             }
         });
 
@@ -64,9 +67,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onResume() {
+        super.onResume();
+        db = openOrCreateDatabase(dbName, Context.MODE_PRIVATE, null);
+        contents.clear();
+        this.fillList(contents);
         db.close();
-        super.onDestroy();
+        adapter.clear();
+        adapter.addAll(contents);
+        adapter.notifyDataSetChanged();
+    }
+
+    private void fillList(List<Note> list){
+        if(db.isOpen()){
+            Cursor c = db.rawQuery("SELECT * FROM " + tableName, null);
+            if(c.getCount() > 0){
+                c.moveToFirst();
+                while(!c.isAfterLast()) {
+                    list.add(new Note(c.getInt(0), c.getString(1), c.getString(2)));
+                    c.moveToNext();
+                }
+            }
+            c.close();
+        }
+    }
+
+    private void resetTable(){
+        if(db.isOpen()){
+            db.execSQL("DELETE FROM " +tableName);
+        }
     }
 
     private class NoteAdapter extends ArrayAdapter<Note>{
