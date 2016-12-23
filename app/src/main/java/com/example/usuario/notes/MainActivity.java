@@ -37,11 +37,7 @@ public class MainActivity extends AppCompatActivity {
         db = openOrCreateDatabase(dbName, Context.MODE_PRIVATE, null);
         db.execSQL("CREATE TABLE IF NOT EXISTS " + tableName + " (id INT, title VARCHAR(255), content VARCHAR(8000))");
         contents = new ArrayList<>();
-        //Delete
-        this.resetTable();
-        //
-        db.execSQL("INSERT INTO " + tableName + " (id, title, content) VALUES (1, 'Bla', 'Some shit')");
-        db.execSQL("INSERT INTO " + tableName + " (id, title, content) VALUES (1, 'BlaBla', 'Some other shit')");
+        resetTable();
         this.fillList(contents);
         db.close();
         adapter = new NoteAdapter(this, contents);
@@ -73,8 +69,6 @@ public class MainActivity extends AppCompatActivity {
         contents.clear();
         this.fillList(contents);
         db.close();
-        adapter.clear();
-        adapter.addAll(contents);
         adapter.notifyDataSetChanged();
     }
 

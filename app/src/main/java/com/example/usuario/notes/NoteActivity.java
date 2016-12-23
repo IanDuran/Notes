@@ -33,13 +33,14 @@ public class NoteActivity extends AppCompatActivity {
                 note.setTitle(title.getText().toString());
                 note.setText(text.getText().toString());
                 updateRow();
+                finish();
             }
         });
     }
 
     private void updateRow(){
         SQLiteDatabase db = openOrCreateDatabase(MainActivity.dbName, Context.MODE_PRIVATE, null);
-        db.execSQL("UPDATE " + MainActivity.tableName + " title='" + note.getTitle() + "', content='" + note.getText() + "' WHERE id=" + note.getId());
+        db.execSQL("UPDATE " + MainActivity.tableName + " SET title='" + note.getTitle() + "', content='" + note.getText() + "' WHERE id=" + note.getId() + ";");
         db.close();
     }
 }

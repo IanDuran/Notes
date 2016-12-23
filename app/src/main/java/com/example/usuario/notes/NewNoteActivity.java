@@ -35,6 +35,8 @@ public class NewNoteActivity extends AppCompatActivity {
                 addRow(newId, title.getText().toString(), text.getText().toString());
                 SharedPreferences.Editor e = sp.edit();
                 e.putInt(CURRENT_INDEX, newId + 1);
+                e.apply();
+                finish();
             }
         });
     }
