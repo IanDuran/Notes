@@ -4,4 +4,5 @@
     <string name="text_text">Text goes here</string>
     <string name="save_text">Save</string>
     <string name="create">Create New</string>
+    <string name="missing_fields">Missing fields</string>
 </resources>

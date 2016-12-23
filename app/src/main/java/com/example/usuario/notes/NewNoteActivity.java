@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 
 public class NewNoteActivity extends AppCompatActivity {
@@ -24,19 +25,23 @@ public class NewNoteActivity extends AppCompatActivity {
         title = (EditText) findViewById(R.id.edit_title);
         text = (EditText) findViewById(R.id.edit_text);
         buttonSave = (Button) findViewById(R.id.button_save);
-        title.setText(R.string.title_text);
-        text.setText(R.string.text_text);
+        title.setHint(R.string.title_text);
+        text.setHint(R.string.text_text);
 
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharedPreferences sp = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
-                int newId = sp.getInt(CURRENT_INDEX, 0);
-                addRow(newId, title.getText().toString(), text.getText().toString());
-                SharedPreferences.Editor e = sp.edit();
-                e.putInt(CURRENT_INDEX, newId + 1);
-                e.apply();
-                finish();
+                if(!title.getText().toString().equals("") || !text.getText().toString().equals("")){
+                    SharedPreferences sp = getSharedPreferences(PREFERENCES, MODE_PRIVATE);
+                    int newId = sp.getInt(CURRENT_INDEX, 0);
+                    addRow(newId, title.getText().toString(), text.getText().toString());
+                    SharedPreferences.Editor e = sp.edit();
+                    e.putInt(CURRENT_INDEX, newId + 1);
+                    e.apply();
+                    finish();
+                }else{
+                    Toast.makeText(getApplicationContext(), R.string.missing_fields, Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
